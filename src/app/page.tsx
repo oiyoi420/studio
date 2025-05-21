@@ -104,7 +104,7 @@ export default function MysticSightPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4 md:p-8 bg-background text-foreground font-sans">
-      <header className="mb-8 text-center">
+      <header className="mb-8 text-center animate-in fade-in slide-in-from-top-5 duration-700">
         <div className="flex items-center justify-center gap-3">
           <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-primary" />
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Mystic Sight</h1>
@@ -115,7 +115,7 @@ export default function MysticSightPage() {
       </header>
 
       <main className="w-full max-w-4xl space-y-8">
-        <Card className="shadow-lg border-primary/30">
+        <Card className="shadow-lg border-primary/30 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
           <CardContent className="p-6 space-y-4">
             <div>
               <Label htmlFor="question" className="text-lg font-medium text-primary">
@@ -143,7 +143,7 @@ export default function MysticSightPage() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px]">
+        <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px] animate-in fade-in duration-500 delay-200">
           {drawnCards.map((card, index) => (
             <TarotCard
               key={card ? card.id : `placeholder-${index}`}
@@ -154,7 +154,7 @@ export default function MysticSightPage() {
         </div>
         
         {isLoading && !reading && !summary && hasDrawn && (
-          <div className="text-center py-8">
+          <div className="text-center py-8 animate-in fade-in duration-300">
             <LoadingSpinner size={48} />
             <p className="mt-4 text-muted-foreground text-lg">
               The spirits are contemplating your query...
@@ -163,7 +163,7 @@ export default function MysticSightPage() {
         )}
 
         {reading && (
-          <Card className="shadow-lg border-accent/50">
+          <Card className="shadow-lg border-accent/50 animate-in fade-in slide-in-from-bottom-8 duration-500">
             <CardHeader>
               <CardTitle className="text-2xl flex items-center text-accent">
                 <MessageSquareText className="mr-3 h-7 w-7" />
@@ -177,10 +177,10 @@ export default function MysticSightPage() {
         )}
 
         {summary && (
-          <Card className="shadow-lg border-secondary/50">
+          <Card className="shadow-lg border-secondary/50 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-100">
             <CardHeader>
-              <CardTitle className="text-2xl flex items-center text-secondary-foreground">
-                 <BookOpenText className="mr-3 h-7 w-7 text-secondary" />
+              <CardTitle className="text-2xl flex items-center text-secondary-foreground"> {/* text-secondary-foreground should provide good contrast on card bg */}
+                 <BookOpenText className="mr-3 h-7 w-7 text-secondary" /> {/* Icon color from secondary theme color */}
                 Key Messages
               </CardTitle>
             </CardHeader>
@@ -194,7 +194,7 @@ export default function MysticSightPage() {
            <Button
             onClick={handleReset}
             variant="outline"
-            className="w-full text-lg py-6 border-primary text-primary hover:bg-primary/10"
+            className="w-full text-lg py-6 border-primary text-primary hover:bg-primary/10 animate-in fade-in duration-500"
           >
             <RefreshCw className="mr-2 h-5 w-5" />
             Ask Another Question
@@ -202,7 +202,7 @@ export default function MysticSightPage() {
         )}
       </main>
 
-      <footer className="mt-12 text-center text-sm text-muted-foreground">
+      <footer className="mt-12 text-center text-sm text-muted-foreground animate-in fade-in duration-700 delay-300">
         <p>&copy; {new Date().getFullYear()} Mystic Sight. For entertainment purposes only.</p>
       </footer>
       

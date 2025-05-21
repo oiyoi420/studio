@@ -11,7 +11,8 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
-  const cardBackSrc = "https://placehold.co/260x450/9400D3/E6E6FA.png"; // Primary/Background
+  // Updated to match new dark theme primary and a light foreground color
+  const cardBackSrc = "https://placehold.co/260x450/8F5BFF/F0F0FC.png"; 
   const cardBackAiHint = "card back";
 
   return (
@@ -23,7 +24,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
       >
         {/* Card Back */}
         <div className="absolute w-full h-full backface-hidden">
-          <ShadCard className="w-full h-full overflow-hidden shadow-lg border-2 border-primary/50">
+          <ShadCard className="w-full h-full overflow-hidden shadow-lg border-2 border-primary/50 bg-card"> {/* Added bg-card for consistency */}
             <CardContent className="p-0 h-full">
               <Image
                 src={cardBackSrc}
@@ -40,8 +41,8 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         {/* Card Front */}
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           {cardData ? (
-            <ShadCard className="w-full h-full overflow-hidden shadow-xl border-2 border-accent">
-              <CardHeader className="p-2 md:p-3 absolute top-0 left-0 right-0 bg-black/30 backdrop-blur-sm z-10 rounded-t-md">
+            <ShadCard className="w-full h-full overflow-hidden shadow-xl border-2 border-accent bg-card"> {/* Added bg-card */}
+              <CardHeader className="p-2 md:p-3 absolute top-0 left-0 right-0 bg-black/40 backdrop-blur-sm z-10 rounded-t-md">
                 <CardTitle className="text-xs md:text-sm font-semibold text-primary-foreground text-center truncate">
                   {cardData.name}
                 </CardTitle>
@@ -67,25 +68,5 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
     </div>
   );
 };
-
-// Add these CSS utility classes to your global CSS or a relevant CSS module if they don't exist
-// perspective: 1000px; (applied via className="perspective" to parent)
-// transform-style: preserve-3d; (applied via className="transform-style-preserve-3d" to flipping div)
-// backface-visibility: hidden; (applied via className="backface-hidden" to front and back)
-// transform: rotateY(180deg); (applied via className="rotate-y-180")
-// Make sure Tailwind is configured for these utilities or add them manually:
-// In your globals.css or a utility CSS file:
-// .perspective { perspective: 1000px; }
-// .transform-style-preserve-3d { transform-style: preserve-3d; }
-// .backface-hidden { backface-visibility: hidden; }
-// .rotate-y-180 { transform: rotateY(180deg); }
-
-// For Tailwind JIT, you might need to safelist these if they are dynamically constructed,
-// but using them directly as classNames like above should work.
-// Alternatively, use arbitrary values in Tailwind:
-// className="[perspective:1000px]"
-// className="[transform-style:preserve-3d]"
-// className="[backface-visibility:hidden]"
-// className="group-hover:[transform:rotateY(180deg)]" (for hover, or dynamically for isFlipped)
 
 export default TarotCard;
