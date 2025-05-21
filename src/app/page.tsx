@@ -53,15 +53,15 @@ export default function MysticSightPage() {
     setDrawnCards(newDrawnCards);
 
     for (let i = 0; i < 3; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 300)); 
+      await new Promise((resolve) => setTimeout(resolve, 300));
       setFlippedStates((prev) => {
         const updated = [...prev];
         updated[i] = true;
         return updated;
       });
     }
-    
-    await new Promise((resolve) => setTimeout(resolve, 500)); 
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
       if (newDrawnCards[0] && newDrawnCards[1] && newDrawnCards[2]) {
@@ -142,17 +142,20 @@ export default function MysticSightPage() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px] animate-in fade-in duration-500 delay-200">
+        <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px]">
           {hasDrawn && drawnCards.map((card, index) => (
             card && // Ensure card is not null before rendering
             <TarotCard
               key={card.id}
               cardData={card}
               isFlipped={flippedStates[index]}
+              className={`animate-in fade-in duration-300 ${
+                index === 0 ? 'delay-0' : index === 1 ? 'delay-[100ms]' : 'delay-[200ms]'
+              }`}
             />
           ))}
         </div>
-        
+
         {isLoading && !reading && !summary && hasDrawn && (
           <div className="text-center py-8 animate-in fade-in duration-300">
             <LoadingSpinner size={48} />
@@ -205,7 +208,7 @@ export default function MysticSightPage() {
       <footer className="mt-12 text-center text-sm text-muted-foreground animate-in fade-in duration-700 delay-300">
         <p>&copy; {new Date().getFullYear()} Mystic Sight. For entertainment purposes only.</p>
       </footer>
-      
+
       <style jsx global>{`
         .perspective-container {
           perspective: 1000px;
