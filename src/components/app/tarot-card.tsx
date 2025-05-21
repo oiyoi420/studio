@@ -33,7 +33,6 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                 layout="responsive"
                 width={700}
                 height={1200}
-                objectFit="cover" 
                 data-ai-hint={cardBackAiHint}
               />
             </CardContent>
@@ -45,12 +44,15 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
           {cardData ? (
             <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card relative">
               {/* Caption div at the top */}
-              <div className="absolute top-0 left-0 right-0 p-1 md:p-2 bg-white/80 backdrop-blur-sm border-b border-accent/30 z-10">
-                <p className="text-xs md:text-sm font-semibold text-center text-neutral-800 truncate" title={cardData.name}>
+              <div className="absolute top-0 left-0 right-0 p-1 md:p-2 z-10">
+                <p 
+                  className="text-xs md:text-sm font-semibold text-center text-primary-foreground truncate" 
+                  title={cardData.name}
+                  style={{ textShadow: '0px 0px 3px rgba(0, 0, 0, 0.7)' }}
+                >
                   {cardData.name}
                 </p>
               </div>
-              {/* Ensure CardContent has no padding that would create a gap from the caption */}
               <CardContent className="p-0 flex-grow relative h-full w-full">
                 <Image
                   src={cardData.imageSrc}
@@ -60,6 +62,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                   height={1200} 
                   objectFit="contain" 
                   data-ai-hint={cardData.imageKeywords}
+                  className="h-full w-full"
                 />
               </CardContent>
             </ShadCard>
@@ -75,3 +78,4 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
 };
 
 export default TarotCard;
+
