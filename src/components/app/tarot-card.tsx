@@ -3,7 +3,7 @@
 
 import type { TarotCardData } from "@/lib/tarot-data";
 import Image from "next/image";
-import { Card as ShadCard, CardContent, CardFooter } from "@/components/ui/card"; // Added CardFooter
+import { Card as ShadCard, CardContent, CardFooter } from "@/components/ui/card";
 
 interface TarotCardProps {
   cardData: TarotCardData | null;
@@ -12,7 +12,7 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
-  const cardBackSrc = "https://placehold.co/200x350/4B0082/FFFFFF.png";
+  const cardBackSrc = "https://placehold.co/200x350/4B0082/FFFFFF.png"; // Dark violet placeholder
   const cardBackAiHint = "card back pattern";
 
   return (
@@ -47,7 +47,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                   alt={cardData.name}
                   layout="fill"
                   objectFit="cover"
-                  className="object-cover"
+                  className="object-cover" // Ensures image covers the area
                   data-ai-hint={cardData.imageKeywords}
                 />
               </CardContent>
