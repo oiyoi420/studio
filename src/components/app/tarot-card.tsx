@@ -12,7 +12,7 @@ interface TarotCardProps {
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
   // Updated to match new dark theme primary and a light foreground color
-  const cardBackSrc = "https://placehold.co/260x450/8F5BFF/F0F0FC.png"; 
+  const cardBackSrc = "/card-back.png";
   const cardBackAiHint = "card back";
 
   return (
@@ -49,7 +49,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
               </CardHeader>
               <CardContent className="p-0 h-full">
                 <Image
-                  src={cardData.imageSrc}
+                  src={`/${cardData.name.toLowerCase()}.jpg`}
                   alt={cardData.name}
                   width={200}
                   height={350}
