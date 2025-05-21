@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -25,8 +26,6 @@ export default function MysticSightPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Add perspective utility class to the body or a high-level container for card flip animations
-    // This is a bit of a hack for global perspective, ideally handled by Tailwind config or a wrapper component
     document.body.classList.add('perspective-container');
     return () => {
       document.body.classList.remove('perspective-container');
@@ -49,14 +48,12 @@ export default function MysticSightPage() {
     setSummary(null);
     setFlippedStates([false, false, false]);
 
-    // Simulate drawing cards
     const shuffledArcana = [...majorArcana].sort(() => 0.5 - Math.random());
-    const newDrawnCards = shuffledArcana.slice(0, 3);
+    const newDrawnCards = shuffledArcana.slice(0, 3) as TarotCardData[]; // Ensure they are TarotCardData
     setDrawnCards(newDrawnCards);
 
-    // Animate card flips sequentially
     for (let i = 0; i < 3; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 300)); // Delay for animation
+      await new Promise((resolve) => setTimeout(resolve, 300)); 
       setFlippedStates((prev) => {
         const updated = [...prev];
         updated[i] = true;
@@ -64,21 +61,23 @@ export default function MysticSightPage() {
       });
     }
     
-    await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for last flip animation
+    await new Promise((resolve) => setTimeout(resolve, 500)); 
 
-    // Get AI reading
     try {
-      const readingResult = await generateReading({
-        card1: newDrawnCards[0].name,
-        card2: newDrawnCards[1].name,
-        card3: newDrawnCards[2].name,
-        query: question,
-      });
-      setReading(readingResult.reading);
+      if (newDrawnCards[0] && newDrawnCards[1] && newDrawnCards[2]) {
+        const readingResult = await generateReading({
+          card1: newDrawnCards[0].name,
+          card2: newDrawnCards[1].name,
+          card3: newDrawnCards[2].name,
+          query: question,
+        });
+        setReading(readingResult.reading);
 
-      // Get AI summary
-      const summaryResult = await summarizeReading({ reading: readingResult.reading });
-      setSummary(summaryResult.summary);
+        const summaryResult = await summarizeReading({ reading: readingResult.reading });
+        setSummary(summaryResult.summary);
+      } else {
+        throw new Error("Failed to draw all cards.");
+      }
     } catch (error) {
       console.error("Error getting AI reading or summary:", error);
       toast({
@@ -144,9 +143,10 @@ export default function MysticSightPage() {
         </Card>
 
         <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px] animate-in fade-in duration-500 delay-200">
-          {drawnCards.map((card, index) => (
+          {hasDrawn && drawnCards.map((card, index) => (
+            card && // Ensure card is not null before rendering
             <TarotCard
-              key={card ? card.id : `placeholder-${index}`}
+              key={card.id}
               cardData={card}
               isFlipped={flippedStates[index]}
             />
@@ -179,8 +179,8 @@ export default function MysticSightPage() {
         {summary && (
           <Card className="shadow-lg border-secondary/50 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-100">
             <CardHeader>
-              <CardTitle className="text-2xl flex items-center text-secondary-foreground"> {/* text-secondary-foreground should provide good contrast on card bg */}
-                 <BookOpenText className="mr-3 h-7 w-7 text-secondary" /> {/* Icon color from secondary theme color */}
+              <CardTitle className="text-2xl flex items-center text-secondary-foreground">
+                 <BookOpenText className="mr-3 h-7 w-7 text-secondary" />
                 Key Messages
               </CardTitle>
             </CardHeader>
@@ -206,7 +206,6 @@ export default function MysticSightPage() {
         <p>&copy; {new Date().getFullYear()} Mystic Sight. For entertainment purposes only.</p>
       </footer>
       
-      {/* CSS for perspective, should be in globals or a layout component ideally */}
       <style jsx global>{`
         .perspective-container {
           perspective: 1000px;

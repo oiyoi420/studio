@@ -1,8 +1,9 @@
+
 "use client";
 
 import type { TarotCardData } from "@/lib/tarot-data";
 import Image from "next/image";
-import { Card as ShadCard, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Renamed to avoid conflict
+import { Card as ShadCard, CardContent } from "@/components/ui/card"; // Renamed to avoid conflict
 
 interface TarotCardProps {
   cardData: TarotCardData | null;
@@ -11,7 +12,6 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
-  // Updated to match new dark theme primary and a light foreground color
   const cardBackSrc = "/card-back.png";
   const cardBackAiHint = "card back";
 
@@ -24,7 +24,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
       >
         {/* Card Back */}
         <div className="absolute w-full h-full backface-hidden">
-          <ShadCard className="w-full h-full overflow-hidden shadow-lg border-2 border-primary/50 bg-card"> {/* Added bg-card for consistency */}
+          <ShadCard className="w-full h-full overflow-hidden shadow-lg border-2 border-primary/50 bg-card">
             <CardContent className="p-0 h-full">
               <Image
                 src={cardBackSrc}
@@ -41,16 +41,12 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         {/* Card Front */}
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           {cardData ? (
-            <ShadCard className="w-full h-full overflow-hidden shadow-xl border-2 border-accent bg-card"> {/* Added bg-card */}
-              <CardHeader className="p-2 md:p-3 absolute top-0 left-0 right-0 bg-black/40 backdrop-blur-sm z-10 rounded-t-md">
-                <CardTitle className="text-xs md:text-sm font-semibold text-primary-foreground text-center truncate">
-                  {cardData.name}
-                </CardTitle>
-              </CardHeader>
+            <ShadCard className="w-full h-full overflow-hidden shadow-xl border-2 border-accent bg-card">
+              {/* CardHeader with CardTitle removed to hide the name */}
               <CardContent className="p-0 h-full">
                 <Image
-                  src={`/${cardData.name.toLowerCase()}.jpg`}
-                  alt={cardData.name}
+                  src={cardData.imageSrc} // Use imageSrc from tarot-data
+                  alt={cardData.name} // Alt text still uses the name for accessibility
                   width={200}
                   height={350}
                   className="object-cover w-full h-full"
@@ -60,8 +56,8 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
             </ShadCard>
           ) : (
              <ShadCard className="w-full h-full flex items-center justify-center bg-muted shadow-lg">
-               <p className="text-muted-foreground">No card data</p>
-             </ShadCard>
+               <p className="text-muted-foreground">Loading card...</p> 
+             </ShadCard> // Fallback if cardData is unexpectedly null after drawing
           )}
         </div>
       </div>
