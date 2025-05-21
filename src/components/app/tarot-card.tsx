@@ -18,7 +18,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
   // Estimate caption height for padding.
   // The caption has p-1 md:p-2. Let's assume text height and padding sums to roughly 2.5rem (40px) for md, less for sm.
   // Tailwind classes for text size: text-xs md:text-sm.
-  // Let's use Tailwind padding classes for consistency. pt-8 (2rem) or pt-10 (2.5rem)
+  // Let's use Tailwind padding classes for consistency. pt-10 (2.5rem) or pt-12 (3rem)
   const captionPaddingClass = "pt-10 md:pt-12"; // Provides space for the caption
 
   return (
@@ -50,8 +50,9 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           {cardData ? (
             <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card relative">
-              <div className="absolute top-0 left-0 right-0 p-1 md:p-2 bg-black/20 backdrop-blur-sm border-b border-accent/30 z-10">
-                <p className="text-xs md:text-sm font-semibold text-center text-card-foreground truncate" title={cardData.name}>
+              {/* Caption div at the top */}
+              <div className="absolute top-0 left-0 right-0 p-1 md:p-2 bg-white border-b border-accent/30 z-10">
+                <p className="text-xs md:text-sm font-semibold text-center text-neutral-800 truncate" title={cardData.name}>
                   {cardData.name}
                 </p>
               </div>
@@ -64,7 +65,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                   height={1200} // Defines aspect ratio (7:12)
                   objectFit="contain" // Ensures entire image is visible within the 7:12 frame
                   data-ai-hint={cardData.imageKeywords}
-                  className="p-1"
+                  // Removed p-1 from className here
                 />
               </CardContent>
             </ShadCard>
@@ -80,3 +81,4 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
 };
 
 export default TarotCard;
+
