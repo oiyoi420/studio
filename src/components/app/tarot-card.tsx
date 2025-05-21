@@ -12,8 +12,9 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
-  const cardBackSrc = "/card-back.png";
-  const cardBackAiHint = "card back";
+  // Using a themed placeholder for the card back
+  const cardBackSrc = "https://placehold.co/200x350/4B0082/FFFFFF.png"; // Dark Violet with White
+  const cardBackAiHint = "card back pattern";
 
   return (
     <div className={`w-[160px] h-[280px] md:w-[200px] md:h-[350px] perspective group ${className}`}>
@@ -42,11 +43,10 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           {cardData ? (
             <ShadCard className="w-full h-full overflow-hidden shadow-xl border-2 border-accent bg-card">
-              {/* CardHeader with CardTitle removed to hide the name */}
               <CardContent className="p-0 h-full">
                 <Image
-                  src={cardData.imageSrc} // Use imageSrc from tarot-data
-                  alt={cardData.name} // Alt text still uses the name for accessibility
+                  src={cardData.imageSrc} 
+                  alt={cardData.name} 
                   width={200}
                   height={350}
                   className="object-cover w-full h-full"
@@ -57,7 +57,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
           ) : (
              <ShadCard className="w-full h-full flex items-center justify-center bg-muted shadow-lg">
                <p className="text-muted-foreground">Loading card...</p> 
-             </ShadCard> // Fallback if cardData is unexpectedly null after drawing
+             </ShadCard> 
           )}
         </div>
       </div>
