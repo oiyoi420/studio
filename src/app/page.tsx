@@ -14,6 +14,41 @@ import { generateReading } from "@/ai/flows/generate-reading";
 import { summarizeReading } from "@/ai/flows/summarize-reading";
 import { useToast } from "@/hooks/use-toast";
 
+type SupportedLanguages = 'en' | 'es';
+
+const translations = {
+  en: {
+    subtitle: "Unveil your path. Ask your question and draw three cards.",
+    yourQuestion: "Your Question:",
+    questionPlaceholder: "What guidance do you seek from the cards?",
+    drawCards: "Draw Your Cards",
+    loadingReading: "The spirits are contemplating your query...",
+    toastQuestionNeededTitle: "Question Needed",
+    toastQuestionNeededDesc: "Please enter your question before drawing cards.",
+    toastAiErrorTitle: "AI Error",
+    toastAiErrorDesc: "Could not generate tarot reading. Please try again.",
+    yourReadingTitle: "Your Reading",
+    keyMessagesTitle: "Key Messages",
+    askAnotherQuestion: "Ask Another Question",
+    footerEntertainment: "For entertainment purposes only."
+  },
+  es: {
+    subtitle: "Revela tu camino. Haz tu pregunta y saca tres cartas.",
+    yourQuestion: "Tu Pregunta:",
+    questionPlaceholder: "¿Qué guía buscas de las cartas?",
+    drawCards: "Saca Tus Cartas",
+    loadingReading: "Los espíritus están contemplando tu consulta...",
+    toastQuestionNeededTitle: "Pregunta Necesaria",
+    toastQuestionNeededDesc: "Por favor, ingresa tu pregunta antes de sacar las cartas.",
+    toastAiErrorTitle: "Error de IA",
+    toastAiErrorDesc: "No se pudo generar la lectura del tarot. Por favor, inténtalo de nuevo.",
+    yourReadingTitle: "Tu Lectura",
+    keyMessagesTitle: "Mensajes Clave",
+    askAnotherQuestion: "Hacer Otra Pregunta",
+    footerEntertainment: "Solo para fines de entretenimiento."
+  }
+};
+
 export default function MysticSightPage() {
   const [question, setQuestion] = useState<string>("");
   const [drawnCards, setDrawnCards] = useState<(TarotCardData | null)[]>([null, null, null]);
@@ -22,21 +57,32 @@ export default function MysticSightPage() {
   const [summary, setSummary] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasDrawn, setHasDrawn] = useState<boolean>(false);
+  const [language, setLanguage] = useState<SupportedLanguages>('en');
 
   const { toast } = useToast();
 
   useEffect(() => {
     document.body.classList.add('perspective-container');
+    
+    const browserLang = navigator.language.split('-')[0] as SupportedLanguages;
+    if (translations[browserLang]) {
+      setLanguage(browserLang);
+    } else {
+      setLanguage('en'); // Default to English
+    }
+
     return () => {
       document.body.classList.remove('perspective-container');
     };
   }, []);
 
+  const t = translations[language];
+
   const handleDrawCards = async () => {
     if (!question.trim()) {
       toast({
-        title: "Question Needed",
-        description: "Please enter your question before drawing cards.",
+        title: t.toastQuestionNeededTitle,
+        description: t.toastQuestionNeededDesc,
         variant: "destructive",
       });
       return;
@@ -47,7 +93,7 @@ export default function MysticSightPage() {
     setReading(null);
     setSummary(null);
     setFlippedStates([false, false, false]);
-    setDrawnCards([null, null, null]); // Clear previous cards immediately
+    setDrawnCards([null, null, null]); 
 
     await new Promise((resolve) => setTimeout(resolve, 50));
 
@@ -55,8 +101,6 @@ export default function MysticSightPage() {
     const newDrawnCards = shuffledDeck.slice(0, 3) as TarotCardData[];
     setDrawnCards(newDrawnCards);
 
-    // Cards will be rendered now, their animation is handled by TarotCard component
-    // Staggered flip:
     for (let i = 0; i < 3; i++) {
       await new Promise((resolve) => setTimeout(resolve, 300));
       setFlippedStates((prev) => {
@@ -66,12 +110,12 @@ export default function MysticSightPage() {
       });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for flip animation
+    await new Promise((resolve) => setTimeout(resolve, 500)); 
 
     try {
       if (newDrawnCards.every(card => card !== null)) {
         const readingResult = await generateReading({
-          card1: newDrawnCards[0]!.name,
+          card1: newDrawnCards[0]!.name, // Card names sent to AI remain in English
           card2: newDrawnCards[1]!.name,
           card3: newDrawnCards[2]!.name,
           query: question,
@@ -86,8 +130,8 @@ export default function MysticSightPage() {
     } catch (error) {
       console.error("Error getting AI reading or summary:", error);
       toast({
-        title: "AI Error",
-        description: "Could not generate tarot reading. Please try again.",
+        title: t.toastAiErrorTitle,
+        description: t.toastAiErrorDesc,
         variant: "destructive",
       });
       setReading("Failed to generate reading.");
@@ -114,7 +158,7 @@ export default function MysticSightPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-primary">Mystic Sight</h1>
         </div>
         <p className="text-muted-foreground mt-2 text-lg">
-          Unveil your path. Ask your question and draw three cards.
+          {t.subtitle}
         </p>
       </header>
 
@@ -123,13 +167,13 @@ export default function MysticSightPage() {
           <CardContent className="p-6 space-y-4">
             <div>
               <Label htmlFor="question" className="text-lg font-medium text-primary">
-                Your Question:
+                {t.yourQuestion}
               </Label>
               <Textarea
                 id="question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                placeholder="What guidance do you seek from the cards?"
+                placeholder={t.questionPlaceholder}
                 className="mt-2 min-h-[80px] text-base focus:ring-accent focus:border-accent"
                 disabled={isLoading || hasDrawn}
               />
@@ -141,14 +185,14 @@ export default function MysticSightPage() {
                 className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isLoading ? <LoadingSpinner className="mr-2" /> : <Sparkles className="mr-2 h-5 w-5" />}
-                Draw Your Cards
+                {t.drawCards}
               </Button>
             )}
           </CardContent>
         </Card>
 
         <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px]">
-          {drawnCards.map((card, index) => (
+          {hasDrawn && drawnCards.map((card, index) => (
             card ? (
               <TarotCard
                 key={card.id}
@@ -159,7 +203,6 @@ export default function MysticSightPage() {
                 }`}
               />
             ) : (
-              // Placeholder maintains layout space with correct aspect ratio
               <div key={`placeholder-${index}`} className="w-[160px] md:w-[200px]" style={{aspectRatio: "7 / 12"}} />
             )
           ))}
@@ -169,7 +212,7 @@ export default function MysticSightPage() {
           <div className="text-center py-8 animate-in fade-in duration-300">
             <LoadingSpinner size={48} />
             <p className="mt-4 text-muted-foreground text-lg">
-              The spirits are contemplating your query...
+              {t.loadingReading}
             </p>
           </div>
         )}
@@ -179,7 +222,7 @@ export default function MysticSightPage() {
             <CardHeader>
               <CardTitle className="text-2xl flex items-center text-accent">
                 <MessageSquareText className="mr-3 h-7 w-7" />
-                Your Reading
+                {t.yourReadingTitle}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -193,7 +236,7 @@ export default function MysticSightPage() {
             <CardHeader>
               <CardTitle className="text-2xl flex items-center text-secondary-foreground">
                  <BookOpenText className="mr-3 h-7 w-7 text-secondary" />
-                Key Messages
+                {t.keyMessagesTitle}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -209,13 +252,13 @@ export default function MysticSightPage() {
             className="w-full text-lg py-6 border-primary text-primary hover:bg-primary/10 animate-in fade-in duration-500"
           >
             <RefreshCw className="mr-2 h-5 w-5" />
-            Ask Another Question
+            {t.askAnotherQuestion}
           </Button>
         )}
       </main>
 
       <footer className="mt-12 text-center text-sm text-muted-foreground animate-in fade-in duration-700 delay-300">
-        <p>&copy; {new Date().getFullYear()} Mystic Sight. For entertainment purposes only.</p>
+        <p>&copy; {new Date().getFullYear()} Mystic Sight. {t.footerEntertainment}</p>
       </footer>
 
       <style jsx global>{`
