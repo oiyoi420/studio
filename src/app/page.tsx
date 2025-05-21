@@ -115,7 +115,7 @@ export default function MysticSightPage() {
     try {
       if (newDrawnCards.every(card => card !== null)) {
         const readingResult = await generateReading({
-          card1: newDrawnCards[0]!.name, // Card names sent to AI remain in English
+          card1: newDrawnCards[0]!.name, 
           card2: newDrawnCards[1]!.name,
           card3: newDrawnCards[2]!.name,
           query: question,
@@ -191,9 +191,9 @@ export default function MysticSightPage() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px]">
-          {hasDrawn && drawnCards.map((card, index) => (
-            card ? (
+        <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[320px] md:min-h-[400px]"> {/* Adjusted min-height slightly */}
+          {drawnCards.map((card, index) => (
+            card && hasDrawn ? ( // Only render TarotCard if card data exists AND hasDrawn is true
               <TarotCard
                 key={card.id}
                 cardData={card}
@@ -203,7 +203,11 @@ export default function MysticSightPage() {
                 }`}
               />
             ) : (
-              <div key={`placeholder-${index}`} className="w-[160px] md:w-[200px]" style={{aspectRatio: "7 / 12"}} />
+              // Placeholder structure to mimic card layout
+              <div key={`placeholder-${index}`} className="w-[160px] md:w-[200px] flex flex-col">
+                <div className="h-6 md:h-8"></div> {/* Placeholder for caption area */}
+                <div className="w-full bg-muted/20 rounded" style={{aspectRatio: "7 / 12"}}></div> {/* Placeholder for image area */}
+              </div>
             )
           ))}
         </div>

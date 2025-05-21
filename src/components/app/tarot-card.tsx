@@ -12,7 +12,7 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
-  const cardBackSrc = "https://placehold.co/700x1200/4B0082/FFFFFF.png"; 
+  const cardBackSrc = "https://placehold.co/700x1200/2c1a3d/FFFFFF.png";
   const cardBackAiHint = "card back pattern";
 
   return (
@@ -21,7 +21,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         className={`relative w-full transition-transform duration-700 ease-in-out transform-style-preserve-3d ${
           isFlipped ? "rotate-y-180" : ""
         }`}
-        style={{ aspectRatio: "7 / 12" }} 
+        // Removed aspectRatio from here, height will be auto based on content
       >
         {/* Card Back */}
         <div className="absolute w-full h-full backface-hidden">
@@ -30,10 +30,12 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
               <Image
                 src={cardBackSrc}
                 alt="Card Back"
-                layout="responsive"
-                width={700}
+                layout="responsive" // This will use the intrinsic aspect ratio of the image or the one defined by width/height
+                width={700} // Defines aspect ratio 7:12
                 height={1200}
+                objectFit="cover" // Cover to fill the card frame for the back
                 data-ai-hint={cardBackAiHint}
+                className="h-full w-full"
               />
             </CardContent>
           </ShadCard>
@@ -42,33 +44,37 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         {/* Card Front */}
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           {cardData ? (
-            <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card relative">
-              {/* Caption div at the top */}
-              <div className="absolute top-0 left-0 right-0 p-1 md:p-2 z-10">
-                <p 
-                  className="text-xs md:text-sm font-semibold text-center text-primary-foreground truncate" 
+            <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card">
+              {/* Caption div - now part of normal flow */}
+              <div className="p-1 md:p-2 text-center">
+                <p
+                  className="text-xs md:text-sm font-semibold text-primary-foreground truncate"
                   title={cardData.name}
                   style={{ textShadow: '0px 0px 3px rgba(0, 0, 0, 0.7)' }}
                 >
                   {cardData.name}
                 </p>
               </div>
-              <CardContent className="p-0 flex-grow relative h-full w-full">
-                <Image
-                  src={cardData.imageSrc}
-                  alt={cardData.name}
-                  layout="responsive"
-                  width={700} 
-                  height={1200} 
-                  objectFit="contain" 
-                  data-ai-hint={cardData.imageKeywords}
-                  className="h-full w-full"
-                />
+              <CardContent className="p-0 flex-grow flex items-center justify-center w-full">
+                {/* Wrapper to enforce image aspect ratio */}
+                <div className="relative w-full" style={{ aspectRatio: "7 / 12" }}>
+                  <Image
+                    src={cardData.imageSrc}
+                    alt={cardData.name}
+                    layout="fill"
+                    objectFit="contain" // Ensures the whole image is visible
+                    data-ai-hint={cardData.imageKeywords}
+                  />
+                </div>
               </CardContent>
             </ShadCard>
           ) : (
-             <ShadCard className="w-full h-full flex items-center justify-center bg-muted shadow-lg">
-               <p className="text-muted-foreground">Loading card...</p>
+             <ShadCard className="w-full h-full flex flex-col items-center justify-center bg-muted shadow-lg">
+               {/* Placeholder for caption area if cardData is null */}
+               <div className="h-6 md:h-8"></div>
+               <div className="flex-grow flex items-center justify-center">
+                 <p className="text-muted-foreground">Loading card...</p>
+               </div>
              </ShadCard>
           )}
         </div>
@@ -78,4 +84,3 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
 };
 
 export default TarotCard;
-
