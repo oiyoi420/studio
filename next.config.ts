@@ -1,23 +1,16 @@
 import type {NextConfig} from 'next';
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
-    ],
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Enable static export
+  output: 'export',
+
+  // Add any other configuration options for Next.js
+  experimental: {
+    appDir: false, // Disable app directory if using incompatible features
   },
 };
+
+module.exports = nextConfig;
 
 export default nextConfig;
