@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TarotCard from "@/components/app/tarot-card";
 import LoadingSpinner from "@/components/app/loading-spinner";
-import { majorArcana, type TarotCardData } from "@/lib/tarot-data";
+import { fullTarotDeck, type TarotCardData } from "@/lib/tarot-data"; // Updated import
 import { generateReading } from "@/ai/flows/generate-reading";
 import { summarizeReading } from "@/ai/flows/summarize-reading";
 import { useToast } from "@/hooks/use-toast";
@@ -20,7 +20,7 @@ export default function MysticSightPage() {
   const [flippedStates, setFlippedStates] = useState<boolean[]>([false, false, false]);
   const [reading, setReading] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // General loading for drawing/AI
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasDrawn, setHasDrawn] = useState<boolean>(false);
 
   const { toast } = useToast();
@@ -47,9 +47,13 @@ export default function MysticSightPage() {
     setReading(null);
     setSummary(null);
     setFlippedStates([false, false, false]);
+    setDrawnCards([null, null, null]); // Clear previous cards immediately
 
-    const shuffledArcana = [...majorArcana].sort(() => 0.5 - Math.random());
-    const newDrawnCards = shuffledArcana.slice(0, 3) as TarotCardData[]; // Ensure they are TarotCardData
+    // Give a moment for placeholders to clear if any were visible due to fast clicks
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const shuffledDeck = [...fullTarotDeck].sort(() => 0.5 - Math.random()); // Use full deck
+    const newDrawnCards = shuffledDeck.slice(0, 3) as TarotCardData[];
     setDrawnCards(newDrawnCards);
 
     for (let i = 0; i < 3; i++) {
@@ -61,14 +65,14 @@ export default function MysticSightPage() {
       });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for flip animation
 
     try {
-      if (newDrawnCards[0] && newDrawnCards[1] && newDrawnCards[2]) {
+      if (newDrawnCards.every(card => card !== null)) {
         const readingResult = await generateReading({
-          card1: newDrawnCards[0].name,
-          card2: newDrawnCards[1].name,
-          card3: newDrawnCards[2].name,
+          card1: newDrawnCards[0]!.name,
+          card2: newDrawnCards[1]!.name,
+          card3: newDrawnCards[2]!.name,
           query: question,
         });
         setReading(readingResult.reading);
@@ -144,15 +148,19 @@ export default function MysticSightPage() {
 
         <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px]">
           {hasDrawn && drawnCards.map((card, index) => (
-            card && // Ensure card is not null before rendering
-            <TarotCard
-              key={card.id}
-              cardData={card}
-              isFlipped={flippedStates[index]}
-              className={`animate-in fade-in duration-300 ${
-                index === 0 ? 'delay-0' : index === 1 ? 'delay-[100ms]' : 'delay-[200ms]'
-              }`}
-            />
+            card ? (
+              <TarotCard
+                key={card.id}
+                cardData={card}
+                isFlipped={flippedStates[index]}
+                className={`animate-in fade-in duration-300 ${
+                  index === 0 ? 'delay-0' : index === 1 ? 'delay-[100ms]' : 'delay-[200ms]'
+                }`}
+              />
+            ) : (
+              // Placeholder to maintain layout before cards are set, but after hasDrawn is true
+              <div key={`placeholder-${index}`} className="w-[160px] h-[280px] md:w-[200px] md:h-[350px]" />
+            )
           ))}
         </div>
 
