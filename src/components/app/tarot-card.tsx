@@ -12,7 +12,7 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className }) => {
-  const cardBackSrc = "https://placehold.co/200x350/4B0082/FFFFFF.png"; // Dark violet placeholder
+  const cardBackSrc = "https://placehold.co/200x350/2A004F/FFFFFF.png"; // Darker violet for consistency
   const cardBackAiHint = "card back pattern";
 
   return (
@@ -30,7 +30,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                 src={cardBackSrc}
                 alt="Card Back"
                 layout="fill"
-                objectFit="cover"
+                objectFit="cover" // Card back can cover fully
                 data-ai-hint={cardBackAiHint}
               />
             </CardContent>
@@ -40,18 +40,17 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         {/* Card Front */}
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           {cardData ? (
-            <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card">
+            <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card relative">
               <CardContent className="p-0 flex-grow relative">
                 <Image
                   src={cardData.imageSrc}
                   alt={cardData.name}
                   layout="fill"
-                  objectFit="cover"
-                  className="object-cover" // Ensures image covers the area
+                  objectFit="contain" // Changed from 'cover' to 'contain'
                   data-ai-hint={cardData.imageKeywords}
                 />
               </CardContent>
-              <CardFooter className="p-1 md:p-2 justify-center bg-card/80 backdrop-blur-sm border-t border-accent/30">
+              <CardFooter className="absolute bottom-0 left-0 right-0 p-1 md:p-2 justify-center bg-black/20 backdrop-blur-sm border-t border-accent/30">
                 <p className="text-xs md:text-sm font-semibold text-center text-card-foreground truncate" title={cardData.name}>
                   {cardData.name}
                 </p>
