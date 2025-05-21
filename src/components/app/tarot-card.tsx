@@ -21,32 +21,31 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
         className={`relative w-full transition-transform duration-700 ease-in-out transform-style-preserve-3d ${
           isFlipped ? "rotate-y-180" : ""
         }`}
-        // Removed aspectRatio from here, height will be auto based on content
       >
         {/* Card Back */}
-        <div className="absolute w-full h-full backface-hidden">
-          <ShadCard className="w-full h-full overflow-hidden shadow-lg border-2 border-primary/50 bg-card">
-            <CardContent className="p-0 h-full relative">
+        <div className="absolute w-full backface-hidden">
+          <ShadCard className="w-full overflow-hidden shadow-lg border-2 border-primary/50 bg-card">
+            <CardContent className="p-0 relative">
               <Image
                 src={cardBackSrc}
                 alt="Card Back"
-                layout="responsive" // This will use the intrinsic aspect ratio of the image or the one defined by width/height
-                width={700} // Defines aspect ratio 7:12
+                layout="responsive"
+                width={700}
                 height={1200}
-                objectFit="cover" // Cover to fill the card frame for the back
+                objectFit="cover"
                 data-ai-hint={cardBackAiHint}
-                className="h-full w-full"
+                className="w-full h-auto"
               />
             </CardContent>
           </ShadCard>
         </div>
 
         {/* Card Front */}
-        <div className="absolute w-full h-full backface-hidden rotate-y-180">
+        <div className="absolute w-full backface-hidden rotate-y-180">
           {cardData ? (
-            <ShadCard className="w-full h-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card">
-              {/* Caption div - now part of normal flow */}
-              <div className="p-1 md:p-2 text-center">
+            <ShadCard className="w-full flex flex-col overflow-hidden shadow-xl border-2 border-accent bg-card">
+              {/* Caption div - now part of normal flow, with fixed height */}
+              <div className="p-1 md:p-2 text-center h-6 md:h-8 shrink-0 flex items-center justify-center">
                 <p
                   className="text-xs md:text-sm font-semibold text-primary-foreground truncate"
                   title={cardData.name}
@@ -55,6 +54,7 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                   {cardData.name}
                 </p>
               </div>
+              {/* CardContent fills the remaining space due to flex-grow */}
               <CardContent className="p-0 flex-grow flex items-center justify-center w-full">
                 {/* Wrapper to enforce image aspect ratio */}
                 <div className="relative w-full" style={{ aspectRatio: "7 / 12" }}>
@@ -62,16 +62,15 @@ const TarotCard: React.FC<TarotCardProps> = ({ cardData, isFlipped, className })
                     src={cardData.imageSrc}
                     alt={cardData.name}
                     layout="fill"
-                    objectFit="contain" // Ensures the whole image is visible
+                    objectFit="contain"
                     data-ai-hint={cardData.imageKeywords}
                   />
                 </div>
               </CardContent>
             </ShadCard>
           ) : (
-             <ShadCard className="w-full h-full flex flex-col items-center justify-center bg-muted shadow-lg">
-               {/* Placeholder for caption area if cardData is null */}
-               <div className="h-6 md:h-8"></div>
+             <ShadCard className="w-full flex flex-col items-center justify-center bg-muted shadow-lg" style={{ minHeight: '200px' /* Approximate minimum height */ }}>
+               <div className="h-6 md:h-8 shrink-0"></div>
                <div className="flex-grow flex items-center justify-center">
                  <p className="text-muted-foreground">Loading card...</p>
                </div>
