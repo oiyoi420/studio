@@ -1,8 +1,7 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
 #
-# Allow all ethical crawlers to access all content
+# Allow crawling of all content
 User-agent: *
-Allow: /
+Disallow:
 
-# Sitemap (optional, uncomment and update if you have one)
-# Sitemap: https://www.yourwebsite.com/sitemap.xml
+Sitemap: https://www.mysticsight.app/sitemap.xml
