@@ -1,13 +1,14 @@
+
 export interface TarotCardData {
   id: number;
   name: string;
   imageKeywords: string; // For data-ai-hint
   uprightKeywords: string; // For display or potential future use
-  imageSrc: string; // Placeholder image
+  imageSrc: string; 
 }
 
 export const majorArcana: TarotCardData[] = [
-  { id: 0, name: "The Fool", imageKeywords: "jester cliff", uprightKeywords: "Beginnings, innocence, spontaneity, a free spirit", imageSrc: "https://placehold.co/260x450/FEF4A0/333333.png" },
+  { id: 0, name: "The Fool", imageKeywords: "cups family", uprightKeywords: "Beginnings, innocence, spontaneity, a free spirit", imageSrc: "/ten of cups.jpg" },
   { id: 1, name: "The Magician", imageKeywords: "magician tools", uprightKeywords: "Manifestation, resourcefulness, power, inspired action", imageSrc: "https://placehold.co/260x450/A0FEF4/333333.png" },
   { id: 2, name: "The High Priestess", imageKeywords: "priestess moon", uprightKeywords: "Intuition, sacred knowledge, divine feminine, the subconscious mind", imageSrc: "https://placehold.co/260x450/F4A0FE/333333.png" },
   { id: 3, name: "The Empress", imageKeywords: "empress nature", uprightKeywords: "Femininity, beauty, nature, nurturing, abundance", imageSrc: "https://placehold.co/260x450/A0F4FE/333333.png" },
