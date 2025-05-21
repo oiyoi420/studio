@@ -16,6 +16,23 @@ const geistMono = Geist_Mono({
 // IMPORTANT: Replace with your actual deployed domain
 const siteUrl = 'https://www.mysticsight.app';
 
+// Define JSON-LD data structure here to be used in metadata
+const jsonLdWebSiteData = {
+  '@context': 'https.schema.org',
+  '@type': 'WebSite',
+  name: 'Mystic Sight - Tarot Reading', // Consistent with previous manual JSON-LD
+  url: siteUrl,
+  description: 'Unveil your path with AI-powered tarot card interpretations. Ask your question, draw three cards, and receive insightful readings from Mystic Sight.', // Consistent with previous manual JSON-LD
+  // potentialAction: { // Uncomment if you have site search
+  //   '@type': 'SearchAction',
+  //   target: {
+  //     '@type': 'EntryPoint',
+  //     urlTemplate: `${siteUrl}/search?q={search_term_string}`
+  //   },
+  //   'query-input': 'required name=search_term_string'
+  // }
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -66,6 +83,9 @@ export const metadata: Metadata = {
     },
   },
 
+  other: {
+    'application/ld+json': JSON.stringify(jsonLdWebSiteData),
+  }
   // Optional: If you have an icons/manifest.json
   // icons: {
   //   icon: '/favicon.ico',
@@ -80,32 +100,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteNameForJsonLd = "Mystic Sight - Tarot Reading";
-  const siteDescriptionForJsonLd = "Unveil your path with AI-powered tarot card interpretations. Ask your question, draw three cards, and receive insightful readings from Mystic Sight.";
-  
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: siteNameForJsonLd,
-    url: siteUrl,
-    description: siteDescriptionForJsonLd,
-    // potentialAction: { // Uncomment if you have site search
-    //   '@type': 'SearchAction',
-    //   target: {
-    //     '@type': 'EntryPoint',
-    //     urlTemplate: `${siteUrl}/search?q={search_term_string}`
-    //   },
-    //   'query-input': 'required name=search_term_string'
-    // }
-  };
-
+  // The manual <script> tag for JSON-LD is no longer needed in the <head> here.
+  // Next.js will inject it based on the `metadata.other` field.
   return (
     <html lang="en">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        {/* Next.js handles metadata script injection */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
