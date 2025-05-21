@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TarotCard from "@/components/app/tarot-card";
 import LoadingSpinner from "@/components/app/loading-spinner";
-import { fullTarotDeck, type TarotCardData } from "@/lib/tarot-data"; // Updated import
+import { fullTarotDeck, type TarotCardData } from "@/lib/tarot-data";
 import { generateReading } from "@/ai/flows/generate-reading";
 import { summarizeReading } from "@/ai/flows/summarize-reading";
 import { useToast } from "@/hooks/use-toast";
@@ -49,13 +49,14 @@ export default function MysticSightPage() {
     setFlippedStates([false, false, false]);
     setDrawnCards([null, null, null]); // Clear previous cards immediately
 
-    // Give a moment for placeholders to clear if any were visible due to fast clicks
     await new Promise((resolve) => setTimeout(resolve, 50));
 
-    const shuffledDeck = [...fullTarotDeck].sort(() => 0.5 - Math.random()); // Use full deck
+    const shuffledDeck = [...fullTarotDeck].sort(() => 0.5 - Math.random());
     const newDrawnCards = shuffledDeck.slice(0, 3) as TarotCardData[];
     setDrawnCards(newDrawnCards);
 
+    // Cards will be rendered now, their animation is handled by TarotCard component
+    // Staggered flip:
     for (let i = 0; i < 3; i++) {
       await new Promise((resolve) => setTimeout(resolve, 300));
       setFlippedStates((prev) => {
@@ -147,7 +148,7 @@ export default function MysticSightPage() {
         </Card>
 
         <div className="flex justify-center items-start space-x-2 md:space-x-4 min-h-[300px] md:min-h-[380px]">
-          {hasDrawn && drawnCards.map((card, index) => (
+          {drawnCards.map((card, index) => (
             card ? (
               <TarotCard
                 key={card.id}
@@ -158,8 +159,8 @@ export default function MysticSightPage() {
                 }`}
               />
             ) : (
-              // Placeholder to maintain layout before cards are set, but after hasDrawn is true
-              <div key={`placeholder-${index}`} className="w-[160px] h-[280px] md:w-[200px] md:h-[350px]" />
+              // Placeholder maintains layout space with correct aspect ratio
+              <div key={`placeholder-${index}`} className="w-[160px] md:w-[200px]" style={{aspectRatio: "7 / 12"}} />
             )
           ))}
         </div>
